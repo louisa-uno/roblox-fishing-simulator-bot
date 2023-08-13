@@ -1,4 +1,4 @@
-# Automated Fishing Script for the Roblox game Fishing Simulator
+# Roblox Fishing Simulator Automation Bot
 
 This script provides automated mouse and keyboard actions to simulate fishing in the roblox game Fishing Simulator. It uses image recognition to detect fish and air bubbles on the screen and performs actions accordingly.
 
