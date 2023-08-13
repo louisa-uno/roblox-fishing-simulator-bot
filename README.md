@@ -18,19 +18,19 @@ This script provides automated mouse and keyboard actions to simulate fishing in
 
 1. Clone the repository:
 
-```
+```batch
 git clone https://github.com/Luois45/roblox-fishing-simulator-bot.git
 ```
 
 2. Navigate to the project directory:
 
-```
+```batch
 cd roblox-fishing-simulator-bot
 ```
 
 3. Install the required packages:
 
-```
+```batch
 pip install -r requirements.txt
 ```
 
@@ -40,7 +40,7 @@ pip install -r requirements.txt
 2. Position the game window such that the script can detect the necessary pixels (Fullscreen is recommended on a 1920x1080 screen)
 3. Run the script:
 
-```
+```batch
 python fishing_script.py
 ```
 
