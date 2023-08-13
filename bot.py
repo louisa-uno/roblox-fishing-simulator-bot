@@ -103,7 +103,8 @@ while keyboard.is_pressed('q') == False:
 	if fish_found == True:
 		if pyautogui.pixel(830, 800) != (83, 250, 83):
 			fish_counter += 1
-			print('Fische gefangen: ' + str(fish_counter))
+			print('Fish caught: ' + str(fish_counter)
+			      )  # Translated "Fische gefangen" to "Fish caught"
 			fish_found = False
 			double_click_random_throw()
 	# If fish not found, check for air bubbles
@@ -123,7 +124,9 @@ while keyboard.is_pressed('q') == False:
 	# If inventory is full, sell
 	# Wenn das Inventar voll ist, verkaufen
 	if fish_counter == 2000:
-		print('Inventar voll, verkaufe...')
+		print(
+		    'Inventory full, selling...'
+		)  # Translated "Inventar voll, verkaufe..." to "Inventory full, selling..."
 		exit()
 	counter -= 1
 	time.sleep(0.025)
