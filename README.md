@@ -19,7 +19,7 @@ This script provides automated mouse and keyboard actions to simulate fishing in
 
 -   Python 3.8
 
-## Installation
+## Installation for Windows
 
 1. Clone the repository:
 
@@ -41,12 +41,13 @@ pip install -r requirements.txt
 
 ## Usage
 
+1. Edit the Coordinate Variables on the bot.py to adjust to your screen/game.
 1. Start the roblox game Fishing Simulator
 2. Position the game window such that the script can detect the necessary pixels (Fullscreen is recommended on a 1920x1080 screen)
 3. Run the script:
 
 ```batch
-python fishing_script.py
+python bot.py
 ```
 
 4. The script will start simulating fishing actions. Press 'q' to stop the script.

@@ -116,6 +116,24 @@ def sell_inventory():
 	keyboard.release('f')
 	time.sleep(0.10)
 
+def fishingBarCheck():
+    # Number of pixels to check horizontally around monitorFishingPixel
+    pixel_range = 5
+    
+    for offset in range(-pixel_range, pixel_range + 1):  # Iterate from -5 to 5
+        # Adjust x-coordinate of the pixel being checked
+        x, y = monitorFishingPixel
+        current_pixel = (x + offset, y)
+
+        try:
+            # Check if the pixel matches either color
+            if (pyautogui.pixel(*current_pixel) == fishingMeterColor or 
+                pyautogui.pixel(*current_pixel) == fishingGaugeColor):
+                return True  # A match is found
+        except Exception as e:
+            print(f"Error checking pixel at {current_pixel}: {e}")
+
+    return False  # No match found
 
 # Initialize counters and flags
 counter = 0  # General counter for loop control
@@ -131,17 +149,17 @@ while keyboard.is_pressed('q') == False:
 
 	# Increment fish counter if a fish was detected
 	if fish_found == True:
-		print("Fish hooked!")
-		while pyautogui.pixel(*monitorFishingPixel) == fishingMeterColor or pyautogui.pixel(*monitorFishingPixel) == fishingGaugeColor:
-			print("Reading Pixel Color:", pyautogui.pixel(*monitorFishingPixel))
+		print("Fish hooked! Reeling...")
+		# while pyautogui.pixel(*monitorFishingPixel) == fishingMeterColor or pyautogui.pixel(*monitorFishingPixel) == fishingGaugeColor:
+		while fishingBarCheck() == True:
 			
 			if pyautogui.pixel(*monitorFishingPixel) == fishingGaugeColor:
-				print("Reeling Threshold hit! Reeling...")
+				print("Reeling Threshold hit! Pulling HARDER!!")
 				double_click_random_throw()
 			time.sleep(0.005)
 			
 			
-		# Check if the pixel color at specific coordinates does not match the inventory colors
+		# Check if the pixel color at specific coordinates does not match the fishingbar colors
 		if pyautogui.pixel(*monitorFishingPixel) != fishingMeterColor or pyautogui.pixel(*monitorFishingPixel) != fishingGaugeColor:
 			fish_counter += 1  # Increment the fish counter
 			print('Fish caught: ' + str(fish_counter))  # Log the number of fish caught
