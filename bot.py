@@ -35,17 +35,6 @@ def click(x, y):
     time.sleep(random.uniform(0.001, 0.005))  # Add another delay before releasing the button
     win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0)  # Simulate mouse left button release
 
-# Function to simulate a mouse click using pydirectinput for smoother and safer interactions
-def safety_click(x, y):
-    pydirectinput.moveTo(x, y)  # Move the cursor to the specified coordinates
-    time.sleep(random.uniform(0.01, 0.05))  # Add a small random delay
-    pydirectinput.click()  # Simulate a mouse click at the current position
-
-# Function to simulate a double mouse click at specific coordinates
-def double_click(x, y):
-    click(x, y)  # Perform the first click
-    time.sleep(random.uniform(0.02, 0.025))  # Add a short delay before the second click
-    click(x, y)  # Perform the second click
 
 # Function to retrieve a counter value for controlling loop iterations
 def get_counter():
