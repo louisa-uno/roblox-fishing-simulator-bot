@@ -11,8 +11,9 @@ This script provides automated mouse and keyboard actions to simulate fishing in
 -   Simulates mouse clicks and movements.
 -   Detects fish and air bubbles using pixel color recognition.
 -   Randomized click timings to simulate human-like interactions.
+-   Adjusts to the difficult of fish, making sure the fishing meter stays on center.
 -   Keeps track of the number of fish caught.
--   Exits when the inventory is full.
+-   Automatically sells if inventory is full. (Only if you bought gamepass.)
 
 ## Prerequisites
 
@@ -23,7 +24,7 @@ This script provides automated mouse and keyboard actions to simulate fishing in
 1. Clone the repository:
 
 ```batch
-git clone https://github.com/Luois45/roblox-fishing-simulator-bot.git
+git clone https://github.com/KristianCorrea/roblox-fishing-simulator-bot
 ```
 
 2. Navigate to the project directory:
