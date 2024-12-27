@@ -8,18 +8,26 @@ import random  # Import random for generating random values
 import win32api, win32con  # Import win32api and win32con for low-level system control
 import pydirectinput  # Import pydirectinput for safer and smoother input simulation
 import math
-
-
+import win32gui
+import win32ui
+# KC info
+# monitorFishingPixel = 891, 877
+# mouseClickCords = (971, 426)
+# bagFullTextCords = (1055, 771)
+# sellButtonCords = (1084, 356)
+# sellEverthingCords = (1211, 492)
+# KB info
+# monitorFishingPixel = 1185, 1065
+# sellButtonCords = (1433, 433)
+# sellEverthingCords = (1710, 580)
+# bagFullTextCords = (1163, 937)
 fishingGaugeColor = (255, 255, 255)  # WHITE
 fishingMeterColor = (83, 250, 83)  # GREEN
 bubbleColor = (68, 252, 234)  # Define the RGB color code for air bubbles
-monitorFishingPixel = 891, 877
-bubbleCheckP1 = (436, 192)
-bubbleCheckP2 = (1527, 856)
+monitorFishingPixel = 1185, 1065
 mouseClickCords = (971, 426)
 bagFullTextCords = (1055, 771)
 bagFullTextColor = (253, 0, 97)  # RED
-openBagCords = (400, 400)
 sellButtonCords = (1084, 356)
 sellEverthingCords = (1211, 492)
 
@@ -45,33 +53,83 @@ def click(x, y):
 
 # Function to retrieve a counter value for controlling loop iterations
 def get_counter():
-    counter = 12  # Set the counter to a predefined value
+    counter = 15  # Set the counter to a predefined value
     return counter  # Return the counter value
 
 
 # Function to detect specific air bubbles on the screen based on their color
-def check_air_bubbles_on_screen():
-    s = pyautogui.screenshot()  # Capture the current screen as an image
-    # for x in range(770, 1160):  # Iterate through the horizontal pixel range
-    #     for y in range(350, 730):  # Iterate through the vertical pixel range
-    for x in range(
-        bubbleCheckP1[0], bubbleCheckP2[0]
-    ):  # Iterate through the horizontal pixel range
-        for y in range(
-            bubbleCheckP1[1], bubbleCheckP2[1]
-        ):  # Iterate through the vertical pixel range
-            tempvar = False  # Temporary variable to track color matches
-            for x2 in range(5):  # Check a small horizontal range for consistent color
-                if (
-                    s.getpixel((x + x2, y)) == bubbleColor
-                ):  # Verify if the pixel matches the target color
-                    tempvar = True  # Update the variable if the color matches
-                else:
-                    tempvar = False  # Reset the variable if the color does not match
-                    break  # Exit the loop as the match is invalid
-            if tempvar is True:  # If a valid match is found
-                return True  # Return True to indicate bubbles are detected
+def capture_screen():
+    screen_width = win32api.GetSystemMetrics(win32con.SM_CXSCREEN)
+    screen_height = win32api.GetSystemMetrics(win32con.SM_CYSCREEN)
 
+    hwin = win32gui.GetDesktopWindow()
+    hwindc = win32gui.GetWindowDC(hwin)
+    srcdc = win32ui.CreateDCFromHandle(hwindc)
+    memdc = srcdc.CreateCompatibleDC()
+
+    bmp = win32ui.CreateBitmap()
+    bmp.CreateCompatibleBitmap(srcdc, screen_width, screen_height)
+    memdc.SelectObject(bmp)
+
+    memdc.BitBlt((0, 0), (screen_width, screen_height), srcdc, (0, 0), win32con.SRCCOPY)
+    bits = bmp.GetBitmapBits(True)
+
+    # Clean up resources
+    memdc.DeleteDC()
+    srcdc.DeleteDC()
+    win32gui.ReleaseDC(hwin, hwindc)
+    win32gui.DeleteObject(bmp.GetHandle())
+    return bits, screen_width, screen_height
+
+def get_resolution_pyautogui():
+    cur_width, cur_height = pyautogui.size()
+    return cur_width, cur_height
+class BubbleDetector:
+    def __init__(self):
+        self.last_detection_time = 0
+        self.detection_cooldown = 2.0  # Cooldown in seconds
+
+    def check_air_bubbles_on_screen(self):
+        """Check for air bubbles with cooldown to prevent multiple detections"""
+        current_time = time.time()
+        if current_time - self.last_detection_time < self.detection_cooldown:
+            return False
+
+        try:
+            bits, screen_width, screen_height = capture_screen()
+
+            chunk_size = 50
+            matches_found = False
+
+            for y in range(0, screen_height - chunk_size, chunk_size):
+                if matches_found:
+                    break
+                for x in range(0, screen_width - chunk_size, chunk_size):
+                    matches = 0
+                    for sample_y in range(y, y + chunk_size, 2):
+                        for sample_x in range(x, x + chunk_size, 2):
+                            pixel_offset = ((sample_y * screen_width + sample_x) * 4)
+                            if pixel_offset + 2 >= len(bits):
+                                continue
+
+                            b = bits[pixel_offset]
+                            g = bits[pixel_offset + 1]
+                            r = bits[pixel_offset + 2]
+
+                            if (abs(r - 68) < 2 and
+                                abs(g - 252) < 2 and
+                                abs(b - 234) < 2):
+                                matches += 1
+
+                            if matches >= 3:
+                                self.last_detection_time = current_time
+                                return True
+
+            return False
+
+        except Exception as e:
+            print(f"Error checking bubbles: {e}")
+            return False
 
 def leftClick():
     time.sleep(random.uniform(0.001, 0.005))  # Pause for a short, randomized duration
@@ -149,6 +207,7 @@ def fishingBarCheck():
 
 def main():
 		# Initialize counters and flags
+	bubble_detector = BubbleDetector()
 	counter = 0  # General counter for loop control
 	fish_counter = 0  # Counter to track the number of fish caught
 	fish_found = False  # Flag to indicate if a fish is currently detected
@@ -185,7 +244,7 @@ def main():
 
 		# If no fish is detected, check for air bubbles on the screen
 		if fish_found == False:
-			if check_air_bubbles_on_screen() == True:
+			if bubble_detector.check_air_bubbles_on_screen() == True:
 				print("Detected Bubbles. Attempting to reel.")
 				click_random_throw()  # Perform a random click to reel in the fish
 				counter = get_counter()  # Reset the counter
@@ -194,14 +253,15 @@ def main():
 		# If the counter reaches zero, perform a throw or reel-in action
 		print("Waiting for Bubbles. Recasting in: ", counter)
 		if counter == 0:
-			keyboard.press("1")
-			time.sleep(0.1)
-			keyboard.release("1")
 			time.sleep(0.1)
 			keyboard.press("1")
 			time.sleep(0.1)
 			keyboard.release("1")
-			time.sleep(0.5)
+			time.sleep(0.1)
+			keyboard.press("1")
+			time.sleep(0.1)
+			keyboard.release("1")
+			time.sleep(0.3)
 			double_click_random_throw()  # Perform a double random throw to reset the fishing rod
 			counter = get_counter()  # Reset the counter
 
