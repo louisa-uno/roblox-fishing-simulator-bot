@@ -118,7 +118,7 @@ def sell_inventory():
 
 def fishingBarCheck():
     # Number of pixels to check horizontally around monitorFishingPixel
-    pixel_range = 5
+    pixel_range = 3
     
     for offset in range(0, pixel_range + 1):  # Iterate from -5 to 5
         # Adjust x-coordinate of the pixel being checked
@@ -165,6 +165,7 @@ while keyboard.is_pressed('q') == False:
 			print('Fish caught: ' + str(fish_counter))  # Log the number of fish caught
 			fish_found = False  # Reset the fish detection flag
 			print("RECASTING...")
+			time.sleep(0.2)
 			double_click_random_throw()  # Perform a double random throw to reset the fishing rod
 			
 	# If no fish is detected, check for air bubbles on the screen
@@ -185,6 +186,7 @@ while keyboard.is_pressed('q') == False:
 		keyboard.press('1')
 		time.sleep(0.1)
 		keyboard.release('1')
+		time.sleep(0.5)
 		double_click_random_throw()  # Perform a double random throw to reset the fishing rod
 		counter = get_counter()  # Reset the counter
 
