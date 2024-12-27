@@ -13,15 +13,15 @@ import math
 fishingGaugeColor = (255, 255, 255) #WHITE
 fishingMeterColor = (83, 250, 83) #GREEN
 bubbleColor = (68, 252, 234)  # Define the RGB color code for air bubbles
-monitorFishingPixel = 1330, 1318
-bubbleCheckP1 = (1016, 438)
-bubbleCheckP2 = (2080, 1165)
-mouseClickCords = (1490, 808)
-bagFullTextCords = (1590, 1160)
+monitorFishingPixel = 891, 877
+bubbleCheckP1 = (436, 192)
+bubbleCheckP2 = (1527, 856)
+mouseClickCords = (971, 426)
+bagFullTextCords = (1055, 771)
 bagFullTextColor = (253, 0, 97) #RED
-openBagCords = (1872, 1590)
-sellButtonCords = (1648, 538)
-sellEverthingCords = (1900, 730)
+openBagCords = (400, 400)
+sellButtonCords = (1084, 356)
+sellEverthingCords = (1211, 492)
 
 sellGamepass = True # CHANGE TO FALSE IF NO SELL GAMEPASS
 
@@ -107,7 +107,7 @@ def sell_inventory():
 	win32api.mouse_event(win32con.MOUSEEVENTF_MOVE, 1, 1, 0, 0)
 	leftClick()
 	time.sleep(1)
-	win32api.mouse_event(win32con.MOUSEEVENTF_MOVE, -50, 0, 0, 0)
+	win32api.mouse_event(win32con.MOUSEEVENTF_MOVE, -20, 0, 0, 0)
 	win32api.mouse_event(win32con.MOUSEEVENTF_MOVE, 1, 1, 0, 0)
 	time.sleep(1)
 	leftClick()
@@ -120,7 +120,7 @@ def fishingBarCheck():
     # Number of pixels to check horizontally around monitorFishingPixel
     pixel_range = 5
     
-    for offset in range(-pixel_range, pixel_range + 1):  # Iterate from -5 to 5
+    for offset in range(0, pixel_range + 1):  # Iterate from -5 to 5
         # Adjust x-coordinate of the pixel being checked
         x, y = monitorFishingPixel
         current_pixel = (x + offset, y)
